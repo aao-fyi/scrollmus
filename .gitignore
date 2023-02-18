@@ -1,9 +1,7 @@
 # Node
 node_modules
-test/results
-test/coverage
 
-## OS X
+# Apple
 .DS_Store
 ._*
 .Spotlight-V100
