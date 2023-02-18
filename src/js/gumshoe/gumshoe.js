@@ -163,7 +163,7 @@
 	 * @return {Boolean} If true, page is at the bottom of the viewport
 	 */
 	var isAtBottom = function () {
-		if (window.innerHeight + window.pageYOffset >= getDocumentHeight()) return true;
+		if (Math.ceil(window.innerHeight + window.pageYOffset) >= getDocumentHeight()) return true;
 		return false;
 	};
 
@@ -174,7 +174,7 @@
 	 * @return {Boolean}         If true, use the last item
 	 */
 	var useLastItem = function (item, settings) {
-		if (settings.useLast && isAtBottom() && isInView(item.content, settings, true)) return true;
+		if (item && settings.useLast && isAtBottom() && isInView(item.content, settings, true)) return true;
 		return false;
 	};
 
