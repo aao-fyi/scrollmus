@@ -1,61 +1,16 @@
-/*!
- * gumshoejs v5.1.2
- * A simple, framework-agnostic scrollspy script.
- * (c) 2019 Chris Ferdinandi
- * MIT License
- * http://github.com/cferdinandi/gumshoe
- */
+/*! Scrollmus | MIT License | (c) Scrollmus Contributors | (c) Go Make Things, LLC */
 
-/**
- * Element.closest() polyfill
- * https://developer.mozilla.org/en-US/docs/Web/API/Element/closest#Polyfill
- */
-if (!Element.prototype.closest) {
-	if (!Element.prototype.matches) {
-		Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
-	}
-	Element.prototype.closest = function (s) {
-		var el = this;
-		var ancestor = this;
-		if (!document.documentElement.contains(el)) return null;
-		do {
-			if (ancestor.matches(s)) return ancestor;
-			ancestor = ancestor.parentElement;
-		} while (ancestor !== null);
-		return null;
-	};
-}
-/**
- * CustomEvent() polyfill
- * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent#Polyfill
- */
-(function () {
-
-	if (typeof window.CustomEvent === "function") return false;
-
-	function CustomEvent(event, params) {
-		params = params || { bubbles: false, cancelable: false, detail: undefined };
-		var evt = document.createEvent('CustomEvent');
-		evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
-		return evt;
-	}
-
-	CustomEvent.prototype = window.Event.prototype;
-
-	window.CustomEvent = CustomEvent;
-	
-})();
 (function (root, factory) {
 	if ( typeof define === 'function' && define.amd ) {
-		define([], (function () {
+		define([], function () {
 			return factory(root);
-		}));
+		});
 	} else if ( typeof exports === 'object' ) {
 		module.exports = factory(root);
 	} else {
-		root.Gumshoe = factory(root);
+		root.Scrollmus = factory(root);
 	}
-})(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, (function (window) {
+})(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function (window) {
 
 	'use strict';
 
@@ -78,7 +33,10 @@ if (!Element.prototype.closest) {
 		reflow: false,
 
 		// Event support
-		events: true
+		events: true,
+
+		// Toggle useLastItem
+		useLast: true
 
 	};
 
@@ -94,12 +52,12 @@ if (!Element.prototype.closest) {
 	 */
 	var extend = function () {
 		var merged = {};
-		Array.prototype.forEach.call(arguments, (function (obj) {
+		Array.prototype.forEach.call(arguments, function (obj) {
 			for (var key in obj) {
 				if (!obj.hasOwnProperty(key)) return;
 				merged[key] = obj[key];
 			}
-		}));
+		});
 		return merged;
 	};
 
@@ -148,12 +106,12 @@ if (!Element.prototype.closest) {
 	 */
 	var sortContents = function (contents) {
 		if(contents) {
-			contents.sort((function (item1, item2) {
+			contents.sort(function (item1, item2) {
 				var offset1 = getOffsetTop(item1.content);
 				var offset2 = getOffsetTop(item2.content);
 				if (offset1 < offset2) return -1;
 				return 1;
-			}));
+			});
 		}
 	};
 
@@ -208,7 +166,7 @@ if (!Element.prototype.closest) {
 	 * @return {Boolean} If true, page is at the bottom of the viewport
 	 */
 	var isAtBottom = function () {
-		if (window.innerHeight + window.pageYOffset >= getDocumentHeight()) return true;
+		if (Math.ceil(window.innerHeight + window.pageYOffset) >= getDocumentHeight()) return true;
 		return false;
 	};
 
@@ -219,7 +177,7 @@ if (!Element.prototype.closest) {
 	 * @return {Boolean}         If true, use the last item
 	 */
 	var useLastItem = function (item, settings) {
-		if (isAtBottom() && isInView(item.content, settings, true)) return true;
+		if (item && settings.useLast && isAtBottom() && isInView(item.content, settings, true)) return true;
 		return false;
 	};
 
@@ -281,7 +239,7 @@ if (!Element.prototype.closest) {
 		deactivateNested(li, settings);
 
 		// Emit a custom event
-		emitEvent('gumshoeDeactivate', li, {
+		emitEvent('scrollmusDeactivate', li, {
 			link: items.nav,
 			content: items.content,
 			settings: settings
@@ -334,7 +292,7 @@ if (!Element.prototype.closest) {
 		activateNested(li, settings);
 
 		// Emit a custom event
-		emitEvent('gumshoeActivate', li, {
+		emitEvent('scrollmusActivate', li, {
 			link: items.nav,
 			content: items.content,
 			settings: settings
@@ -373,7 +331,7 @@ if (!Element.prototype.closest) {
 			contents = [];
 
 			// Loop through each item, get it's matching content, and push to the array
-			Array.prototype.forEach.call(navItems, (function (item) {
+			Array.prototype.forEach.call(navItems, function (item) {
 
 				// Get the content for the nav item
 				var content = document.getElementById(decodeURIComponent(item.hash.substr(1)));
@@ -385,7 +343,7 @@ if (!Element.prototype.closest) {
 					content: content
 				});
 
-			}));
+			});
 
 			// Sort contents by the order they appear in the DOM
 			sortContents(contents);
@@ -449,10 +407,10 @@ if (!Element.prototype.closest) {
 			}
 
 			// Setup debounce callback
-			timeout = window.requestAnimationFrame((function () {
+			timeout = window.requestAnimationFrame(function () {
 				sortContents(contents);
 				publicAPIs.detect();
-			}));
+			});
 
 		};
 
@@ -520,4 +478,4 @@ if (!Element.prototype.closest) {
 
 	return Constructor;
 
-}));
+});
