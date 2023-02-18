@@ -1,3 +1,5 @@
+/*! Scrollmus | MIT License | (c) Scrollmus Contributors | (c) Go Make Things, LLC */
+
 (function (root, factory) {
 	if ( typeof define === 'function' && define.amd ) {
 		define([], function () {
@@ -6,7 +8,7 @@
 	} else if ( typeof exports === 'object' ) {
 		module.exports = factory(root);
 	} else {
-		root.Gumshoe = factory(root);
+		root.Scrollmus = factory(root);
 	}
 })(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function (window) {
 
@@ -35,6 +37,7 @@
 
 		// Toggle useLastItem
 		useLast: true
+
 	};
 
 
@@ -236,7 +239,7 @@
 		deactivateNested(li, settings);
 
 		// Emit a custom event
-		emitEvent('gumshoeDeactivate', li, {
+		emitEvent('scrollmusDeactivate', li, {
 			link: items.nav,
 			content: items.content,
 			settings: settings
@@ -289,7 +292,7 @@
 		activateNested(li, settings);
 
 		// Emit a custom event
-		emitEvent('gumshoeActivate', li, {
+		emitEvent('scrollmusActivate', li, {
 			link: items.nav,
 			content: items.content,
 			settings: settings

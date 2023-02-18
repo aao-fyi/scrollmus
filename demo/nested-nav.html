@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Scrollmus</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+	<div class="container">
+		<div class="grid">
+			<!-- Header -->
+			<nav>
+				<ul id="my-awesome-nav">
+					<li><a href="#eenie">Eenie</a></li>
+					<li>
+						<a href="#meenie">Meenie</a>
+						<ul>
+							<li><a href="#hickory">Hickory</a></li>
+							<li><a href="#dickory">Dickory</a></li>
+							<li><a href="#doc">Doc</a></li>
+						</ul>
+					</li>
+					<li><a href="#miney">Miney</a></li>
+					<li><a href="#mo">Mo</a></li>
+				</ul>
+			</nav>
+			<!-- Main -->
+			<main>
+				<div class="section" id="eenie">
+					<h2>Eenie...</h2>
+				</div>
+				<div class="section" id="meenie">
+					<h2>Meenie...</h2>
+					<p class="subsection" id="hickory">Hickory &rarr;</p>
+					<p class="subsection" id="dickory">Dickory &rarr;</p>
+					<p class="subsection" id="doc">Doc &rarr;</p>
+				</div>
+				<div class="section" id="miney">
+					<h2>Miney...</h2>
+				</div>
+				<div class="section" id="mo">
+					<h2>Mo...</h2>
+				</div>
+				<p><a data-scroll href="#">Back to the top</a></p>
+			</main>
+		</div>
+	</div>
+	<!-- Scrollmus -->
+	<script src="../src/scrollmus.js"></script>
+	<script>
+		var spy = new Scrollmus('#my-awesome-nav a', {
+			nested: true
+		});
+	</script>
+</body>
+</html>

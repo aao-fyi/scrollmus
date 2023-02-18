@@ -1,0 +1,79 @@
+/* General */
+:root {
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+.container {
+  max-width: 90em;
+  width: 88%;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* Header */
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #f7f7f7;
+  width: 100%;
+}
+.list-inline {
+  list-style: none;
+  margin-left: -0.5em;
+  margin-right: -0.5em;
+  padding: 0;
+}
+.list-inline li {
+  display: inline-block;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  padding: 0.25em 0.5em;
+}
+#my-awesome-nav {
+  position: fixed;
+}
+#my-awesome-nav a {
+  display: inline-block;
+  padding: 0.25em 0.5em;
+}
+#my-awesome-nav li.active > a {
+  background-color: black;
+}
+#my-awesome-nav li.active > a {
+  color: white;
+}
+/* Sections */
+.grid {
+  display: grid;
+  grid-gap: 2em;
+  grid-template-columns: 30% 70%;
+}
+.section {
+  color: #ffffff;
+  height: 95vh;
+  margin: 0;
+  padding: 2em;
+}
+.section-small {
+  height: 50vh;
+}
+.subsection {
+  height: 25vh;
+  margin: 0;
+}
+#eenie {
+  background-color: #0088cc;
+}
+#meenie {
+  background-color: #663399;
+}
+#miney {
+  background-color: #272727;
+}
+#mo {
+  background-color: #f42b37;
+}
+#tiger {
+  background-color: #e5e5e5;
+  color: #000000;
+}

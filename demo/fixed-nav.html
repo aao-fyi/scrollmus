@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Scrollmus</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./style.css">
+	<style type="text/css">
+		main {
+			padding-top: 150px;
+		}
+		.container {
+			max-width: 40em;
+			width: 88%;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		#my-awesome-nav {
+		  position: static;
+		}
+	</style>
+</head>
+<body>
+	<!-- Header -->
+	<nav id="my-header" class="fixed-header">
+		<div class="container">
+			<h1>Scrollmus</h1>
+			<ul id="my-awesome-nav" class="list-inline">
+				<li><a data-scroll href="#eenie">Eenie</a></li>
+				<li><a data-scroll href="#meenie">Meenie</a></li>
+				<li><a data-scroll href="#miney">Miney</a></li>
+				<li><a data-scroll href="#mo">Mo</a></li>
+			</ul>
+		</div>
+	</nav>
+	<!-- Main -->
+	<main class="container">
+		<div id="eenie" class="section">
+			<h2>Eenie...</h2>
+		</div>
+		<div id="meenie" class="section">
+			<h2>Meenie...</h2>
+		</div>
+		<div id="miney" class="section">
+			<h2>Miney...</h2>
+		</div>
+		<div id="mo" class="section">
+			<h2>Mo...</h2>
+		</div>
+		<p><a data-scroll href="#">Back to the top</a></p>
+	</main>
+	<!-- Scrollmus -->
+	<script src="../src/scrollmus.js"></script>
+	<script>
+		var spy = new Scrollmus('#my-awesome-nav a', {
+			offset: function () {
+				var header = document.querySelector('#my-header');
+				var computed = window.getComputedStyle(header);
+				return parseFloat(computed.height) + parseFloat(computed.marginTop) + parseFloat(computed.marginBottom) + parseFloat(computed.paddingTop) + parseFloat(computed.paddingBottom);
+			}
+		});
+	</script>
+</body>
+</html>

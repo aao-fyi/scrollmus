@@ -1,65 +1,89 @@
-# Gumshoe [![Build Status](https://travis-ci.org/cferdinandi/gumshoe.svg)](https://travis-ci.org/cferdinandi/gumshoe)
-A simple vanilla JS scrollspy script. Gumshoe works great with [Smooth Scroll](https://github.com/cferdinandi/smooth-scroll).
+# Scrollmus
+Framework-agnostic scrollspy script, fork of [Gumshoe by cferdinandi](https://github.com/cferdinandi/gumshoe). The latest compiled release can be found in the `dist` directory.
 
-**[View the Demo on CodePen &rarr;](https://codepen.io/cferdinandi/pen/aMvxKr)**
+What's different?
 
-[Getting Started](#getting-started) | [Nested Navigation](#nested-navigation) | [Reflows](#catching-reflows) | [Fixed Headers](#accounting-for-fixed-headers) | [API](#api) | [What's new?](#whats-new) | [Browser Compatibility](#browser-compatibility) | [License](#license)
++ Added `useLast` toggle [GS#128](https://github.com/cferdinandi/gumshoe/issues/128)
++ Merged [GS#111](https://github.com/cferdinandi/gumshoe/issues/111) & [GS#117](https://github.com/cferdinandi/gumshoe/issues/117)
++ Removed polyfill support (Internet Explorer)
 
-<hr>
+## Browser Support
+Scrollmus supports all modern browsers; this does not include Internet Explorer.
 
-### Want to learn how to write your own vanilla JS plugins? Check out my [Vanilla JS Pocket Guides](https://vanillajsguides.com/) or join the [Vanilla JS Academy](https://vanillajsacademy.com) and level-up as a web developer. 🚀
+| Firefox | Chrome | Edge  | Safari | IE    |
+| :---:   | :---:  | :---: | :---:  | :---: |
+| 35+     | 41+    | 15+   | 9+     | --    |
 
-<hr>
+## Include
 
-
-## Getting Started
-
-Compiled and production-ready code can be found in the `dist` directory. The `src` directory contains development code.
-
-### 1. Include Gumshoe on your site.
-
-There are two versions of Gumshoe: the standalone version, and one that comes preloaded with polyfills for `closest()` and `CustomEvent()`, which are only supported in newer browsers.
-
-If you're including your own polyfills or don't want to enable this feature for older browsers, use the standalone version. Otherwise, use the version with polyfills.
-
-**Direct Download**
-
-You can [download the files directly from GitHub](https://github.com/cferdinandi/gumshoe/archive/master.zip).
+### Static
+Download the latest compiled release from the `dist` directory.
 
 ```html
-<script src="path/to/gumshoe.polyfills.min.js"></script>
+<script defer src="/path/to/scrollmus.min.js"></script>
 ```
 
-**CDN**
+### CDN
+Scrollmus can be loaded using a CDN of choice. It is recommended to use a specific version range to prevent major updates from breaking your site. Scrollmus uses semantic versioning.
 
-You can also use the [jsDelivr CDN](https://cdn.jsdelivr.net/gh/cferdinandi/gumshoe/dist/). I recommend linking to a specific version number or version range to prevent major updates from breaking your site. Gumshoe uses semantic versioning.
+Refer to the [jsDelivr NPM CDN feature documentation](https://www.jsdelivr.com/features#npm) for information on version ranges.
+
+#### jsDelivr
 
 ```html
-<!-- Always get the latest version -->
-<!-- Not recommended for production sites! -->
-<script src="https://cdn.jsdelivr.net/gh/cferdinandi/gumshoe/dist/gumshoe.polyfills.min.js"></script>
-
-<!-- Get minor updates and patch fixes within a major version -->
-<script src="https://cdn.jsdelivr.net/gh/cferdinandi/gumshoe@4/dist/gumshoe.polyfills.min.js"></script>
-
-<!-- Get patch fixes within a minor version -->
-<script src="https://cdn.jsdelivr.net/gh/cferdinandi/gumshoe@4.0/dist/gumshoe.polyfills.min.js"></script>
-
-<!-- Get a specific version -->
-<script src="https://cdn.jsdelivr.net/gh/cferdinandi/gumshoe@4.0.0/dist/gumshoe.polyfills.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/scrollmus/dist/scrollmus.min.js"></script>
 ```
 
-**NPM**
+#### unpkg
 
-You can also use NPM (or your favorite package manager).
+```html
+<script defer src="https://unpkg.com/scrollmus/dist/scrollmus.min.js"></script>
+```
+
+### Hugo
+Scrollmus can be loaded as a Hugo Module.
+
+Initialize the Hugo project as a Hugo Module. Replace the path with your repository.
 
 ```bash
-npm install gumshoejs
+hugo mod init gitlab.com/username/project
 ```
 
-### 2. Add the markup to your HTML.
+Add the following `[module]` configuration to the project's `config.toml` file. If the `gitlab.com` import fails for your project, replace it with `github.com`. Scrollmus is distributed on both platforms.
 
-The only thing Gumshoe needs to work is a list of anchor links. They can be ordered or unordered, inline or unstyled, or even nested.
+```toml
+[module]
+  [[module.imports]]
+    path = 'gitlab.com/aao-fyi/scrollmus'
+  [[module.imports.mounts]]
+    source = 'dist/'
+    target = 'assets/js/scrollmus/'
+```
+
+Load Scrollmus wherever necessary.
+
+```html
+{{ $scrollmus := resources.Get "js/scrollmus/scrollmus.min.js" }}
+<script defer src="{{ $scrollmus.RelPermalink }}"></script>
+```
+
+Optionally use [subresource integrity](https://developer.mozilla.org/docs/web/Security/Subresource_Integrity).
+
+```html
+{{ $scrollmus := resources.Get "js/scrollmus/scrollmus.min.js" }}
+{{ $scrollmusSRI := $scrollmus | resources.Fingerprint "sha384" }}
+<script defer src="{{ $scrollmusSRI.RelPermalink }}" integrity="{{ $scrollmusSRI.Data.Integrity }}"></script>
+```
+
+### NPM
+The wombats of the group can use NPM.
+
+```bash
+npm install scrollmus
+```
+
+## Usage
+The only thing Scrollmus needs to work is a list of anchor links. They can be ordered or unordered, inline or unstyled, or even nested.
 
 ```html
 <ul id="my-awesome-nav">
@@ -70,19 +94,16 @@ The only thing Gumshoe needs to work is a list of anchor links. They can be orde
 </ul>
 ```
 
-### 3. Initialize Gumshoe.
-
-In the footer of your page, after the content, initialize Gumshoe by passing in a selector for the navigation links that should be detected as the user scrolls.
+In the footer of your page, after the [include](#include), initialize Scrollmus by passing in a selector for the navigation links that should be detected as the user scrolls.
 
 ```html
 <script>
-	var spy = new Gumshoe('#my-awesome-nav a');
+	var spy = new Scrollmus('#my-awesome-nav a');
 </script>
 ```
 
-### 4. Add styling.
-
-Gumshoe adds the `.active` class to the list item (`<li></li>`) and content for the active link, but does not include any styling.
+## Styling
+Scrollmus adds the `.active` class to the list item (`<li></li>`) and content for the active link, but does not include any styling.
 
 Add styles to your CSS as desired. And that's it, you're done. Nice work!
 
@@ -92,15 +113,92 @@ Add styles to your CSS as desired. And that's it, you're done. Nice work!
 }
 ```
 
-**[View a Demo on CodePen &rarr;](https://codepen.io/cferdinandi/pen/aMvxKr)**
-
 *__Note:__ you can customize the class names with [user options](#options-and-settings).*
 
+## API
+Scrollmus includes smart defaults and works right out of the box. But if you want to customize things, it also has a robust API that provides multiple ways for you to adjust the default options and settings.
 
+### Options and Settings
+You can pass options into Scrollmus when instantiating.
 
-## Nested navigation
+```js
+var spy = new Scrollmus('#my-awesome-nav a', {
 
-If you have a nested navigation menu with multiple levels, Gumshoe can also apply an `.active` class to the parent list items of the currently active link.
+	// Active classes
+	navClass: 'active', // applied to the nav list item
+	contentClass: 'active', // applied to the content
+
+	// Nested navigation
+	nested: false, // if true, add classes to parents of active link
+	nestedClass: 'active', // applied to the parent items
+
+	// Offset & reflow
+	offset: 0, // how far from the top of the page to activate a content area
+	reflow: false, // if true, listen for reflows
+
+	// Event support
+	events: true, // if true, emit custom events
+
+	// End of page
+	useLast: true // if true, the last page item will be set as 'active' when scrolled to bottom
+});
+```
+
+### Custom Events
+Scrollmus emits two custom events:
+
++ `scrollmusActivate` is emitted when a link is activated.
++ `scrollmusDeactivate` is emitted when a link is deactivated.
+
+Both events are emitted on the list item and bubble up. You can listen for them with the `addEventListener()` method. The `event.detail` object includes the `link` and `content` elements, and the `settings` for the current instantiation.
+
+```js
+// Listen for activate events
+document.addEventListener('scrollmusActivate', function (event) {
+
+	// The list item
+	var li = event.target;
+
+	// The link
+	var link = event.detail.link;
+
+	// The content
+	var content = event.detail.content;
+
+}, false);
+```
+
+### Methods
+Scrollmus also exposes several public methods.
+
+#### setup()
+Setups all of the calculations Scrollmus needs behind-the-scenes. If you dynamically add navigation items to the DOM after Scrollmus is instantiated, you can run this method to update the calculations.
+
+```js
+var spy = new Scrollmus('#my-awesome-nav a');
+spy.setup();
+```
+
+#### detect()
+Activate the navigation link that's content is currently in the viewport.
+
+```js
+var spy = new Scrollmus('#my-awesome-nav a');
+spy.detect();
+```
+
+#### destroy()
+Destroy the current instance of Scrollmus.
+
+```js
+var spy = new Scrollmus('#my-awesome-nav a');
+spy.destroy();
+```
+
+## Examples
+
+### Nested Navigation
+If you have a nested navigation menu with multiple levels, Scrollmus can also apply an `.active` class to the parent list items of the currently active link.
 
 ```html
 <ul id="my-awesome-nav">
@@ -118,33 +216,27 @@ If you have a nested navigation menu with multiple levels, Gumshoe can also appl
 </ul>
 ```
 
-Set `nested` to `true` when instantiating Gumshoe. You can also customize the class name.
+Set `nested` to `true` when initializing. This class name can also be customized.
 
 ```js
-var spy = new Gumshoe('#my-awesome-nav a', {
+var spy = new Scrollmus('#my-awesome-nav a', {
 	nested: true,
 	nestedClass: 'active-parent'
 });
 ```
 
-**[Try nested navigation on CodePen &rarr;](https://codepen.io/cferdinandi/pen/JzYVxj)**
-
-
-## Catching reflows
-
-If the content that's linked to by your navigation has different layouts at different viewports, Gumshoe will need to detect these changes and update some calculations behind-the-scenes.
+### Catching Reflows
+If the content that's linked to by your navigation has different layouts at different viewports, Scrollmus will need to detect these changes and update some calculations behind-the-scenes.
 
 Set `reflow` to `true` to enable this (it's off by default).
 
 ```js
-var spy = new Gumshoe('#my-awesome-nav a', {
+var spy = new Scrollmus('#my-awesome-nav a', {
 	reflow: true
 });
 ```
 
-
-## Accounting for fixed headers
-
+### Fixed Headers
 If you have a fixed header on your page, you may want to offset when a piece of content is considered "active."
 
 The `offset` user setting accepts either a number, or a function that returns a number. If you need to dynamically calculate dimensions, a function is the preferred method.
@@ -155,145 +247,25 @@ Here's an example that automatically calculates a header's height and offsets by
 // Get the header
 var header = document.querySelector('#my-header');
 
-// Initialize Gumshoe
-var spy = new Gumshoe('#my-awesome-nav a', {
+// Initialize Scrollmus
+var spy = new Scrollmus('#my-awesome-nav a', {
 	offset: function () {
 		return header.getBoundingClientRect().height;
 	}
 });
 ```
 
-**[Try using an offset on CodePen &rarr;](https://codepen.io/cferdinandi/pen/eXpLqo)**
+### Use Last Item
+By default, when the user scrolls to the bottom of the page the last item will be marked active. To prevent this behavior, set `useLast` to false when you call Scrollmus. When `useLast` is false, the item at the top of the page will continue to be marked active.
 
-
-
-## API
-
-Gumshoe includes smart defaults and works right out of the box. But if you want to customize things, it also has a robust API that provides multiple ways for you to adjust the default options and settings.
-
-### Options and Settings
-
-You can pass options into Gumshoe when instantiating.
-
-```javascript
-var spy = new Gumshoe('#my-awesome-nav a', {
-
-	// Active classes
-	navClass: 'active', // applied to the nav list item
-	contentClass: 'active', // applied to the content
-
-	// Nested navigation
-	nested: false, // if true, add classes to parents of active link
-	nestedClass: 'active', // applied to the parent items
-
-	// Offset & reflow
-	offset: 0, // how far from the top of the page to activate a content area
-	reflow: false, // if true, listen for reflows
-
-	// Event support
-	events: true, // if true, emit custom events
-
-	// Toggle useLastItem
-	useLast: true // if true, set last item 'active' when scrolled to bottom
+```js
+var spy = new Scrollmus('#my-awesome-nav a', {
+	useLast: false
 });
 ```
 
-### Custom Events
-
-Gumshoe emits two custom events:
-
-- `gumshoeActivate` is emitted when a link is activated.
-- `gumshoeDeactivate` is emitted when a link is deactivated.
-
-Both events are emitted on the list item and bubble up. You can listen for them with the `addEventListener()` method. The `event.detail` object includes the `link` and `content` elements, and the `settings` for the current instantiation.
-
-```js
-// Listen for activate events
-document.addEventListener('gumshoeActivate', function (event) {
-
-	// The list item
-	var li = event.target;
-
-	// The link
-	var link = event.detail.link;
-
-	// The content
-	var content = event.detail.content;
-
-}, false);
-```
-
-### Methods
-
-Gumshoe also exposes several public methods.
-
-#### setup()
-Setups all of the calculations Gumshoe needs behind-the-scenes. If you dynamically add navigation items to the DOM after Gumshoe is instantiated, you can run this method to update the calculations.
-
-**Example**
-
-```javascript
-var spy = new Gumshoe('#my-awesome-nav a');
-spy.setup();
-```
-
-#### detect()
-Activate the navigation link that's content is currently in the viewport.
-
-**Example**
-
-```javascript
-var spy = new Gumshoe('#my-awesome-nav a');
-spy.detect();
-```
-
-#### destroy()
-Destroy the current instantiation of Gumshoe.
-
-**Example**
-
-```javascript
-var spy = new Gumshoe('#my-awesome-nav a');
-spy.destroy();
-```
-
-
-
-
-## What's new?
-
-Gumshoe 4 is a ground-up rewrite.
-
-### New Features
-
-- Multiple instantiations can be run with different settings for each.
-- An active class is now added to the content as well.
-- Nested navigation is now supported.
-- Offsets can be dynamically calculated instead of set just once at initialization.
-- Special and non-Roman characters can now be used in anchor links and IDs.
-- Custom events provide a more flexible way to react to DOM changes.
-
-### Breaking Changes
-
-- Gumshoe must now be instantiated as a new object (`new Gumshoe()`) instead of being initialized `gumshoe.init()`.
-- Callback methods have been removed in favor of events.
-- Automatic header offsetting has been removed.
-- The public `init()` method has been deprecated.
-
-
-
-## Browser Compatibility
-
-Gumshoe works in all modern browsers, and IE 9 and above.
-
-### Polyfills
-
-Support back to IE9 requires polyfills for `closest()` and `CustomEvent()`. Without them, support starts with Edge.
-
-Use the included polyfills version of Gumshoe, or include your own.
-
-
+## Issues
+Open new issues in the [GitLab Issue Tracker](https://gitlab.com/aao-fyi/scrollmus/-/issues).
 
 ## License
-
-The code is available under the [MIT License](LICENSE.md).
+Scrollmus is distributed under the [MIT License](https://gitlab.com/aao-fyi/scrollmus/-/blob/main/LICENSE).
