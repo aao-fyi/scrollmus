@@ -31,8 +31,10 @@
 		reflow: false,
 
 		// Event support
-		events: true
+		events: true,
 
+		// Toggle useLastItem
+		useLast: true
 	};
 
 
@@ -172,7 +174,7 @@
 	 * @return {Boolean}         If true, use the last item
 	 */
 	var useLastItem = function (item, settings) {
-		if (isAtBottom() && isInView(item.content, settings, true)) return true;
+		if (settings.useLast && isAtBottom() && isInView(item.content, settings, true)) return true;
 		return false;
 	};
 
