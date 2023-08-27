@@ -23,23 +23,6 @@ Download the latest compiled release from the `dist` directory.
 <script defer src="/path/to/scrollmus.min.js"></script>
 ```
 
-### CDN
-Scrollmus can be loaded using a CDN of choice. It is recommended to use a specific version range to prevent major updates from breaking your site. Scrollmus uses semantic versioning.
-
-Refer to the [jsDelivr NPM CDN feature documentation](https://www.jsdelivr.com/features#npm) for information on version ranges.
-
-#### jsDelivr
-
-```html
-<script defer src="https://cdn.jsdelivr.net/npm/scrollmus/dist/scrollmus.min.js"></script>
-```
-
-#### unpkg
-
-```html
-<script defer src="https://unpkg.com/scrollmus/dist/scrollmus.min.js"></script>
-```
-
 ### Hugo
 Scrollmus can be loaded as a Hugo Module.
 
